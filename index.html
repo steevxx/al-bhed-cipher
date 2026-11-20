@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Bhed Flashcard Quiz</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center py-4">
+            <h1 class="display-4 fw-bold text-info">
+                <i class="fas fa-language me-3"></i>Al Bhed Flashcard Quiz
+            </h1>
+            <p class="lead text-muted">Learn Final Fantasy X's fictional language</p>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="text-center">
+            <div class="card bg-dark border-secondary mx-auto" style="max-width: 600px;">
+                <div class="card-body p-5">
+                    <h2 class="card-title mb-4">Welcome to the Al Bhed Quiz!</h2>
+                    <p class="card-text mb-4">
+                        Choose a mode to practice the Al Bhed language from Final Fantasy X.
+                    </p>
+                    <div class="mb-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="bg-secondary rounded p-3">
+                                    <i class="fas fa-random fa-2x text-info mb-2"></i>
+                                    <div class="small">Random Order</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-secondary rounded p-3">
+                                    <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                                    <div class="small">Score Tracking</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="bg-secondary rounded p-3">
+                                    <i class="fas fa-mobile-alt fa-2x text-warning mb-2"></i>
+                                    <div class="small">Mobile Friendly</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
+                        <button id="start-quiz-btn" class="btn btn-info btn-lg px-4">
+                            <i class="fas fa-font me-2"></i>Letter Quiz
+                        </button>
+                        <button id="start-sentence-quiz-btn" class="btn btn-success btn-lg px-4">
+                            <i class="fas fa-align-left me-2"></i>Sentence Practice
+                        </button>
+                        <button id="welcome-mapping-btn" class="btn btn-outline-info btn-lg px-4">
+                            <i class="fas fa-book me-2"></i>View Reference
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="d-none">
+            <!-- Progress Bar -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small text-muted">Progress</span>
+                    <span id="progress-text" class="small text-muted">0 / 26</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div id="progress-bar" class="progress-bar bg-info" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div class="text-center mb-4">
+                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="fas fa-star me-1"></i><span id="score-label">Score</span>: <span id="current-score">0</span>
+                </span>
+            </div>
+
+            <!-- Question Card -->
+            <div id="letter-question" class="card bg-dark border-secondary mx-auto" style="max-width: 500px;">
+                <div class="card-body text-center p-5">
+                    <h3 class="card-title mb-4">What is the Al Bhed equivalent of:</h3>
+                    <div id="current-letter" class="display-1 fw-bold text-info mb-4">A</div>
+                    <div class="mb-4">
+                        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-2">
+                            <span id="letter-hint-counter" class="text-muted">Hints left: 3</span>
+
+                            <button id="letter-hint-btn" type="button" class="btn btn-outline-warning">
+                                <i class="fas fa-lightbulb me-2"></i>Hint
+                            </button>
+                        </div>
+                        <div id="letter-hint-display" class="letter-hint-display" aria-live="polite"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <input type="text" id="answer-input" class="form-control form-control-lg text-center"
+                               placeholder="Type your answer..." maxlength="1" autocomplete="off">
+                    </div>
+
+                    <button id="submit-answer-btn" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-check me-2"></i>Submit Answer
+                    </button>
+                    <div class="mt-3">
+                        <button id="letter-home-btn" type="button" class="btn btn-outline-secondary">
+                            <i class="fas fa-house me-2"></i>Back to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sentence-question" class="card bg-dark border-secondary mx-auto d-none" style="max-width: 700px;">
+                <div class="card-body text-center p-4 p-md-5">
+                    <h3 class="card-title mb-4">Translate this sentence into Al Bhed:</h3>
+                    <div id="current-sentence" class="sentence-prompt fw-bold text-info mb-4"></div>
+
+                    <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-2">
+                        <span id="hint-counter" class="text-muted">Hints left: 3</span>
+                        <button id="hint-btn" type="button" class="btn btn-outline-warning">
+                            <i class="fas fa-lightbulb me-2"></i>Hint
+                        </button>
+                    </div>
+                    <div id="hint-display" class="hint-display mb-4" aria-live="polite"></div>
+
+                    <div class="mb-4">
+                        <input type="text" id="sentence-answer-input" class="form-control form-control-lg text-center"
+                               placeholder="Type the full Al Bhed translation..." autocomplete="off" autocapitalize="off"
+                               aria-label="Full Al Bhed sentence translation">
+                    </div>
+
+                    <button id="sentence-submit-btn" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-check me-2"></i>Submit Answer
+                    </button>
+
+                    <div class="mt-3">
+                        <button id="sentence-home-btn" type="button" class="btn btn-outline-secondary">
+                            <i class="fas fa-house me-2"></i>Back to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer feedback modal -->
+        <div class="modal fade" id="answerFeedbackModal" tabindex="-1"
+             aria-labelledby="answerFeedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered feedback-modal-dialog">
+                <div class="modal-content bg-dark border-secondary">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title" id="answerFeedbackModalLabel">Answer Feedback</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="feedback-question" class="text-muted mb-3"></div>
+                        <div id="feedback-status" class="alert mb-0" role="alert" aria-live="polite">
+                            <div id="letter-feedback-content">
+                                <div id="feedback-message"></div>
+                            </div>
+                            <div id="sentence-feedback-content" class="d-none">
+                                <div id="sentence-feedback-message" class="fw-bold mb-2"></div>
+                                <div>
+                                    <span class="text-muted me-2">Expected:</span>
+                                    <span id="expected-translation" class="sentence-answer-breakdown"></span>
+                                    <span id="extra-characters-feedback" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button id="feedback-next-btn" type="button" class="btn btn-primary px-4">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="d-none text-center">
+            <div class="card bg-dark border-secondary mx-auto" style="max-width: 600px;">
+                <div class="card-body p-5">
+                    <div id="results-icon" class="mb-4">
+                        <i class="fas fa-trophy fa-4x text-warning"></i>
+                    </div>
+                    <h2 class="card-title mb-4">Quiz Complete!</h2>
+                    <div id="letter-results">
+                        <div class="mb-4">
+                            <div class="display-4 fw-bold text-info mb-2">
+                                <span id="final-score">0</span>/<span id="total-questions">26</span>
+                            </div>
+                            <div class="text-muted">Final Score</div>
+                        </div>
+                        <div id="performance-message" class="mb-4"></div>
+                        <div id="letter-round-summary" class="row g-3 mb-4">
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="letter-perfect-rounds" class="fs-2 fw-bold text-success">0</div>
+                                    <div>Perfect rounds</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="letter-hinted-rounds" class="fs-2 fw-bold text-warning">0</div>
+                                    <div>Completed with hints</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="letter-total-rounds" class="fs-2 fw-bold text-info">26</div>
+                                    <div>Total rounds</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sentence-results" class="d-none mb-4">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="sentence-perfect-rounds" class="fs-2 fw-bold text-success">0</div>
+                                    <div>Perfect rounds</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="sentence-hinted-rounds" class="fs-2 fw-bold text-warning">0</div>
+                                    <div>Completed with hints</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="bg-secondary rounded p-3 h-100">
+                                    <div id="sentence-total-rounds" class="fs-2 fw-bold text-info">12</div>
+                                    <div>Total rounds</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="letter-result-actions" class="d-flex gap-3 justify-content-center">
+                        <button id="restart-quiz-btn" class="btn btn-info px-4">
+                            <i class="fas fa-redo me-2"></i>Take Quiz Again
+                        </button>
+                        <button id="view-mapping-btn" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-table me-2"></i>View Al Bhed Mapping
+                        </button>
+                    </div>
+                    <div id="sentence-result-actions" class="d-none d-flex gap-3 justify-content-center">
+                        <button id="restart-sentence-quiz-btn" class="btn btn-info px-4">
+                            <i class="fas fa-redo me-2"></i>Start New Quiz
+                        </button>
+                        <button id="sentence-view-mapping-btn" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-table me-2"></i>View Mapping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Al Bhed Mapping Modal -->
+        <div class="modal fade" id="mappingModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title">Al Bhed Alphabet Mapping</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr class="table-info">
+                                        <th>English Letter</th>
+                                        <th>Al Bhed Equivalent</th>
+                                        <th>English Letter</th>
+                                        <th>Al Bhed Equivalent</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mapping-table-body">
+                                    <!-- Populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
